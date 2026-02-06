@@ -3,31 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduMetrics Pro | Responsive Dashboard</title>
+    <title>EduMetrics Pro | AI Strategy Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        
         #ai-sidebar { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* Checkbox estilizado */
         .custom-checkbox { width: 18px; height: 18px; cursor: pointer; accent-color: #2563eb; }
-
-        /* Scrollbar customizada para tabelas */
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
         th, td { white-space: nowrap; }
-
-        /* Ajuste para alinhar as bordas dos cards de KPI */
-        .kpi-card { border-bottom: 1px solid #f1f5f9; }
-        @media (min-width: 768px) { .kpi-card { border-bottom: none; border-right: 1px solid #f1f5f9; } }
-        @media (min-width: 768px) { .kpi-card:nth-child(2n) { border-right: none; } }
-        @media (min-width: 1024px) { .kpi-card { border-right: 1px solid #f1f5f9; } .kpi-card:last-child { border-right: none; } }
     </style>
 </head>
 <body class="flex flex-col lg:flex-row min-h-screen">
@@ -38,109 +26,103 @@
         </button>
         <div id="ai-content" class="hidden p-6 text-white overflow-y-auto">
             <h2 class="font-bold text-lg mb-4">AI Strategist</h2>
-            <p class="text-sm text-slate-400">Layout otimizado para visualização em múltiplos dispositivos.</p>
+            <p class="text-sm text-slate-400">Análise preditiva baseada em cruzamento de dados GSC e Ads.</p>
         </div>
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0">
-        <header class="bg-white border-b border-slate-200 px-4 md:px-8 h-16 flex justify-between items-center sticky top-0 z-40">
+        <header class="bg-white border-b border-slate-200 px-8 h-16 flex justify-between items-center sticky top-0 z-40">
             <div class="flex items-center gap-3">
                 <i data-lucide="graduation-cap" class="text-blue-600 w-6 h-6"></i>
-                <h1 class="font-bold text-slate-800 text-sm md:text-base tracking-tight">University <span class="text-blue-600">Intelligence</span></h1>
+                <h1 class="font-bold text-slate-800 tracking-tight">University <span class="text-blue-600">Intelligence</span></h1>
             </div>
-            <button onclick="downloadTable()" class="flex items-center gap-2 bg-[#1d854e] hover:bg-[#156d3f] text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-xs font-bold transition-all">
-                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> <span class="hidden sm:inline">Exportar</span>
+            <button onclick="downloadTable()" class="flex items-center gap-2 bg-[#1d854e] hover:bg-[#156d3f] text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-md">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Exportar Dados
             </button>
         </header>
 
-        <main class="p-4 md:p-8 w-full max-w-[1600px] mx-auto">
+        <main class="p-4 lg:p-8 w-full max-w-[1600px] mx-auto space-y-8">
             
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mb-8 overflow-hidden">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center">
-                    <div class="kpi-card p-6 border-l-4 border-l-blue-500">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Cliques Orgânicos
-                        </p>
-                        <h3 id="totalClicks" class="text-xl md:text-2xl font-black text-slate-800 mt-1">0</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                    <div class="grid grid-cols-2 md:grid-cols-4 items-center border-b border-slate-100">
+                        <div class="p-6 border-r border-slate-100"><p class="text-[10px] font-bold text-slate-400 uppercase">Cliques</p><h3 id="totalClicks" class="text-xl font-black text-slate-800">0</h3></div>
+                        <div class="p-6 border-r border-slate-100"><p class="text-[10px] font-bold text-slate-400 uppercase">Impressões</p><h3 id="totalImpressions" class="text-xl font-black text-slate-800">0</h3></div>
+                        <div class="p-6 border-r border-slate-100"><p class="text-[10px] font-bold text-slate-400 uppercase">CPC Méd.</p><h3 id="avgCpc" class="text-xl font-black text-slate-800">R$ 0,00</h3></div>
+                        <div class="p-6"><p class="text-[10px] font-bold text-slate-400 uppercase">Custo</p><h3 id="totalCost" class="text-xl font-black text-slate-800">R$ 0</h3></div>
                     </div>
-                    <div class="kpi-card p-6 border-l-4 border-l-red-500">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-red-500"></span> Impressões Orgânicas
-                        </p>
-                        <h3 id="totalImpressions" class="text-xl md:text-2xl font-black text-slate-800 mt-1">0</h3>
-                    </div>
-                    <div class="kpi-card p-6 border-l-4 border-l-slate-200 lg:border-l-0">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">CPC Médio (Equiv.)</p>
-                        <h3 id="avgCpc" class="text-xl md:text-2xl font-black text-slate-800 mt-1">R$ 0,00</h3>
-                    </div>
-                    <div class="kpi-card p-6 border-l-4 border-l-slate-200 lg:border-l-0">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Economia (Custo)</p>
-                        <h3 id="totalCost" class="text-xl md:text-2xl font-black text-slate-800 mt-1">R$ 0,00</h3>
-                    </div>
+                    <div class="p-6 flex-grow"><canvas id="organicLineChart" class="max-h-[250px]"></canvas></div>
                 </div>
-                
-                <div class="p-4 md:p-6">
-                    <div class="h-48 md:h-64 w-full">
-                        <canvas id="organicLineChart"></canvas>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+                        <img src="image_3d649b.png" alt="AI Icon" class="w-5 h-5">
+                        <h3 class="font-bold text-slate-800 text-sm">Sugestões da IA</h3>
+                    </div>
+                    <div class="flex-grow overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                    <th class="px-6 py-4">Termo de Busca</th>
+                                    <th class="px-6 py-4">Recomendação / Insight</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aiSuggestionsBody" class="text-[12px] font-medium divide-y divide-slate-100 italic text-slate-600">
+                                </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 items-stretch">
-                
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden">
-                    <div class="p-4 md:p-5 border-b border-slate-100 bg-blue-50/30 flex justify-between items-center shrink-0">
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <div class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-lg shadow-sm">
-                                <svg viewBox="0 0 512 512" class="w-4 h-4 md:w-5 md:h-5"><path fill="#FBBC04" d="M331.3 103.7L194.5 340.6c-5.5 9.4-16.1 14.8-27.1 13.9-10.9-.8-20.5-7.5-24.8-17.6L44.8 111.4c-5.5-12.8-14.7-23.7-26.4-31L163.6 34.6c24.6-14.2 55.4-14.2 80 0l87.7 50.6c11.6 6.7 20.8 16.7 26.5 28.5l-26.5-10z"/><path fill="#4285F4" d="M467.2 431.4L330.4 194.5c-5.5-9.4-16.1-14.8-27.1-13.9-10.9.8-20.5 7.5-24.8 17.6L180.7 423.6c-5.5 12.8-14.7 23.7-26.4 31l145.2 76.8c24.6 14.2 55.4 14.2 80 0l87.7-50.6c11.6-6.7 20.8-16.7 26.5-28.5l-26.5 10.1z"/><path fill="#34A853" d="M163.6 34.6L18.4 118.4c-11.7 6.8-21 17.6-26.5 30.5l97.8 247.9c4.3 10.1 13.9 16.8 24.8 17.6 11 .9 21.6-4.5 27.1-13.9L278.4 163.8c5.8-10 6.1-22.3.8-32.5L163.6 34.6z"/></svg>
+                    <div class="p-5 border-b border-slate-100 bg-blue-50/30 flex justify-between items-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm">
+                                <img src="image_3ab280.png" class="w-5 h-5" alt="Ads">
                             </div>
-                            <h3 class="font-bold text-slate-800 text-xs md:text-sm">Ads</h3>
+                            <h3 class="font-bold text-slate-800 text-sm">Google Ads</h3>
                         </div>
-                        <button onclick="copyNegatives()" class="text-[9px] md:text-[10px] bg-white border border-blue-200 text-blue-600 px-3 py-1 rounded-full font-bold hover:bg-blue-600 hover:text-white transition-all">Copiar</button>
+                        <button onclick="copyNegatives()" class="text-[10px] bg-white border border-blue-200 text-blue-600 px-3 py-1 rounded-full font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm">Copiar Negativas</button>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar flex-grow">
-                        <table class="w-full border-collapse">
+                        <table class="w-full text-center border-collapse">
                             <thead>
-                                <tr class="bg-slate-50/50 text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
-                                    <th class="px-4 py-4 text-center"></th><th class="px-4 py-4 text-center">#</th>
-                                    <th class="px-6 py-4 text-left sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#e2e8f0]">Termo</th>
-                                    <th class="px-6 py-4 text-center text-blue-600">Impressões</th>
-                                    <th class="px-6 py-4 text-center text-blue-600">Cliques</th>
-                                    <th class="px-6 py-4 text-center text-blue-600">CTR</th>
-                                    <th class="px-6 py-4 text-center text-blue-600">CPC</th>
+                                <tr class="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                    <th class="px-4 py-5"></th><th class="px-4 py-5">#</th>
+                                    <th class="px-8 py-5 text-left sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#e2e8f0]">Termo de Busca</th>
+                                    <th class="px-8 py-5 text-blue-600">Impressões</th><th class="px-8 py-5 text-blue-600">Cliques</th>
+                                    <th class="px-8 py-5 text-blue-600">CTR</th><th class="px-8 py-5 text-blue-600">CPC</th>
                                 </tr>
                             </thead>
-                            <tbody id="adsTableBody" class="text-[11px] md:text-[12px] font-medium divide-y divide-slate-100"></tbody>
+                            <tbody id="adsTableBody" class="text-[12px] font-medium divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
-                    <div id="adsPagination" class="p-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center"></div>
+                    <div id="adsPagination" class="p-4 bg-slate-50/80 border-t border-slate-100 flex justify-between items-center"></div>
                 </div>
 
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden">
-                    <div class="p-4 md:p-5 border-b border-slate-100 bg-emerald-50/30 flex items-center gap-3 shrink-0">
-                        <div class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white rounded-lg shadow-sm">
-                            <svg viewBox="0 0 24 24" class="w-4 h-4 md:w-5 md:h-5"><path fill="#4285F4" d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-9 14H5v-2h6v2zm8-4H5v-2h14v2zm0-4H5V6h14v2z"/></svg>
+                    <div class="p-5 border-b border-slate-100 bg-emerald-50/30 flex items-center gap-3 shrink-0">
+                        <div class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm">
+                            <img src="image_3ab224.png" class="w-5 h-5" alt="GSC">
                         </div>
-                        <h3 class="font-bold text-slate-800 text-xs md:text-sm">Search Console</h3>
+                        <h3 class="font-bold text-slate-800 text-sm">Search Console</h3>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar flex-grow">
-                        <table class="w-full border-collapse">
+                        <table class="w-full text-center border-collapse">
                             <thead>
-                                <tr class="bg-slate-50/50 text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
-                                    <th class="px-4 py-4 text-center"></th><th class="px-4 py-4 text-center">#</th>
-                                    <th class="px-6 py-4 text-left sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#e2e8f0]">Termo</th>
-                                    <th class="px-6 py-4 text-center text-emerald-600">Cliques</th>
-                                    <th class="px-6 py-4 text-center text-emerald-600">Impressões</th>
-                                    <th class="px-6 py-4 text-center text-emerald-600">CTR</th>
-                                    <th class="px-6 py-4 text-center text-emerald-600">Posição</th>
+                                <tr class="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                    <th class="px-4 py-5"></th><th class="px-4 py-5">#</th>
+                                    <th class="px-8 py-5 text-left sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#e2e8f0]">Termo de Busca</th>
+                                    <th class="px-8 py-5 text-emerald-600">Cliques</th><th class="px-8 py-5 text-emerald-600">Impressões</th>
+                                    <th class="px-8 py-5 text-emerald-600">CTR</th><th class="px-8 py-5 text-emerald-600">Posição</th>
                                 </tr>
                             </thead>
-                            <tbody id="orgTableBody" class="text-[11px] md:text-[12px] font-medium divide-y divide-slate-100"></tbody>
+                            <tbody id="orgTableBody" class="text-[12px] font-medium divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
-                    <div id="orgPagination" class="p-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center"></div>
+                    <div id="orgPagination" class="p-4 bg-slate-50/80 border-t border-slate-100 flex justify-between items-center"></div>
                 </div>
-
             </div>
         </main>
     </div>
@@ -151,40 +133,25 @@
             { term: "curso de direito mensalidade", pImp: 18200, pClicks: 1474, pCtr: "8.1%", pCpc: 2.10, sClicks: 243, sImp: 5400, sCtr: "4.5%", pos: 3.4 },
             { term: "melhores faculdades de engenharia", pImp: 4500, pClicks: 99, pCtr: "2.2%", pCpc: 1.80, sClicks: 6970, sImp: 85000, sCtr: "8.2%", pos: 1.1 },
             { term: "inscrição vestibular psicologia", pImp: 32000, pClicks: 4800, pCtr: "15.0%", pCpc: 3.20, sClicks: 10, sImp: 850, sCtr: "1.2%", pos: 22.5 },
-            { term: "bolsa de estudo administração", pImp: 45000, pClicks: 3060, pCtr: "6.8%", pCpc: 1.15, sClicks: 648, sImp: 12000, sCtr: "5.4%", pos: 2.1 },
-            { term: "tecnologia da informação carreira", pImp: 2100, pClicks: 23, pCtr: "1.1%", pCpc: 0.90, sClicks: 11270, sImp: 115000, sCtr: "9.8%", pos: 1.0 }
+            { term: "bolsa de estudo administração", pImp: 45000, pClicks: 3060, pCtr: "6.8%", pCpc: 1.15, sClicks: 648, sImp: 12000, sCtr: "5.4%", pos: 2.1 }
         ];
 
         let adsPage = 1, orgPage = 1, itemsPerPage = 5;
-        let negativeKeywords = new Set();
-
-        function renderPagination(type, current, total) {
-            const totalPages = Math.ceil(total / itemsPerPage);
-            return `
-                <span class="text-[9px] font-black text-slate-400 uppercase">Pág ${current} de ${totalPages}</span>
-                <div class="flex gap-1">
-                    <button onclick="changePage('${type}', -1)" ${current === 1 ? 'disabled' : ''} class="p-1.5 bg-white border border-slate-200 rounded-md hover:bg-blue-50 disabled:opacity-30"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-                    <button onclick="changePage('${type}', 1)" ${current >= totalPages ? 'disabled' : ''} class="p-1.5 bg-white border border-slate-200 rounded-md hover:bg-blue-50 disabled:opacity-30"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
-                </div>
-            `;
-        }
 
         function renderAds() {
             const start = (adsPage - 1) * itemsPerPage;
             const data = universityData.slice(start, start + itemsPerPage);
             document.getElementById('adsTableBody').innerHTML = data.map((d, i) => `
-                <tr class="hover:bg-blue-50/20 transition-all text-center">
-                    <td class="px-4 py-4"><input type="checkbox" class="custom-checkbox" onchange="toggleNegative('${d.term}')"></td>
-                    <td class="px-4 py-4 text-slate-400 font-bold">${start + i + 1}</td>
-                    <td class="px-6 py-4 text-left font-bold text-slate-700 italic sticky left-0 bg-white z-10 shadow-[1px_0_0_0_#e2e8f0]">"${d.term}"</td>
-                    <td class="px-6 py-4">${d.pImp.toLocaleString()}</td>
-                    <td class="px-6 py-4">${d.pClicks.toLocaleString()}</td>
-                    <td class="px-6 py-4 text-blue-800 font-black">${d.pCtr}</td>
-                    <td class="px-6 py-4 font-semibold">R$ ${d.pCpc.toFixed(2)}</td>
-                </tr>
-            `).join('');
-            document.getElementById('adsPagination').innerHTML = renderPagination('ads', adsPage, universityData.length);
-            lucide.createIcons();
+                <tr class="hover:bg-blue-50/20 transition-all">
+                    <td class="px-4 py-4 text-center"><input type="checkbox" class="custom-checkbox"></td>
+                    <td class="px-4 py-4 text-center text-slate-400 font-bold">${start + i + 1}</td>
+                    <td class="px-8 py-5 text-left font-bold text-slate-700 sticky left-0 bg-white z-10 shadow-[1px_0_0_0_#e2e8f0]">"${d.term}"</td>
+                    <td class="px-8 py-5 text-center text-slate-600">${d.pImp.toLocaleString()}</td>
+                    <td class="px-8 py-5 text-center text-slate-600">${d.pClicks.toLocaleString()}</td>
+                    <td class="px-8 py-5 text-center text-blue-800 font-black">${d.pCtr}</td>
+                    <td class="px-8 py-5 text-center font-semibold">R$ ${d.pCpc.toFixed(2)}</td>
+                </tr>`).join('');
+            document.getElementById('adsPagination').innerHTML = `<span class="text-[9px] font-black text-slate-400 uppercase">Pág ${adsPage} de 1</span>`;
         }
 
         function renderOrg() {
@@ -192,45 +159,36 @@
             const data = universityData.slice(start, start + itemsPerPage);
             document.getElementById('orgTableBody').innerHTML = data.map((d, i) => `
                 <tr class="hover:bg-emerald-50/20 transition-all text-center">
-                    <td class="px-4 py-4"><input type="checkbox" class="custom-checkbox"></td>
-                    <td class="px-4 py-4 text-slate-400 font-bold">${start + i + 1}</td>
-                    <td class="px-6 py-4 text-left font-bold text-slate-700 italic sticky left-0 bg-white z-10 shadow-[1px_0_0_0_#e2e8f0]">"${d.term}"</td>
-                    <td class="px-6 py-4">${d.sClicks.toLocaleString()}</td>
-                    <td class="px-6 py-4">${d.sImp.toLocaleString()}</td>
-                    <td class="px-6 py-4 text-emerald-800 font-black">${d.sCtr}</td>
-                    <td class="px-6 py-4 font-bold">${d.pos}º</td>
-                </tr>
-            `).join('');
-            document.getElementById('orgPagination').innerHTML = renderPagination('org', orgPage, universityData.length);
-            lucide.createIcons();
+                    <td class="px-4 py-4 text-center"><input type="checkbox" class="custom-checkbox"></td>
+                    <td class="px-4 py-4 text-center text-slate-400 font-bold">${start + i + 1}</td>
+                    <td class="px-8 py-5 text-left font-bold text-slate-700 sticky left-0 bg-white z-10 shadow-[1px_0_0_0_#e2e8f0]">"${d.term}"</td>
+                    <td class="px-8 py-5">${d.sClicks.toLocaleString()}</td><td class="px-8 py-5">${d.sImp.toLocaleString()}</td>
+                    <td class="px-8 py-5 text-emerald-800 font-black">${d.sCtr}</td><td class="px-8 py-5 font-bold">${d.pos}º</td>
+                </tr>`).join('');
+            document.getElementById('orgPagination').innerHTML = `<span class="text-[9px] font-black text-slate-400 uppercase">Pág ${orgPage} de 1</span>`;
+        }
+
+        function renderAISuggestions() {
+            document.getElementById('aiSuggestionsBody').innerHTML = universityData.slice(0, 3).map(d => {
+                const saving = (d.sClicks * d.pCpc).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                return `<tr>
+                    <td class="px-6 py-4 font-bold text-slate-700">"${d.term}"</td>
+                    <td class="px-6 py-4">Forte presença orgânica detectada. Pausar Ads economizaria <strong>R$ ${saving}</strong>.</td>
+                </tr>`;
+            }).join('');
         }
 
         function updateKPIs() {
-            let totalSImp = universityData.reduce((acc, curr) => acc + curr.sImp, 0);
-            let totalSClicks = universityData.reduce((acc, curr) => acc + curr.sClicks, 0);
-            let totalCost = universityData.reduce((acc, curr) => acc + (curr.sClicks * curr.pCpc), 0);
+            const totalSClicks = universityData.reduce((acc, curr) => acc + curr.sClicks, 0);
+            const totalSImp = universityData.reduce((acc, curr) => acc + curr.sImp, 0);
+            const totalCost = universityData.reduce((acc, curr) => acc + (curr.sClicks * curr.pCpc), 0);
             document.getElementById('totalClicks').innerText = totalSClicks.toLocaleString();
             document.getElementById('totalImpressions').innerText = (totalSImp / 1000).toFixed(1) + ' mil';
-            document.getElementById('avgCpc').innerText = 'R$ ' + (totalSClicks > 0 ? totalCost / totalSClicks : 0).toFixed(2);
-            document.getElementById('totalCost').innerText = 'R$ ' + totalCost.toLocaleString('pt-BR', {maximumFractionDigits:0});
+            document.getElementById('avgCpc').innerText = 'R$ ' + (totalCost / totalSClicks).toFixed(2);
+            document.getElementById('totalCost').innerText = 'R$ ' + totalCost.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
         }
 
-        function changePage(type, dir) {
-            if (type === 'ads') adsPage += dir; else orgPage += dir;
-            renderAds(); renderOrg();
-        }
-
-        function toggleAI() {
-            const sidebar = document.getElementById('ai-sidebar');
-            const content = document.getElementById('ai-content');
-            const isExpanded = sidebar.classList.contains('lg:w-[400px]');
-            sidebar.classList.toggle('lg:w-[400px]', !isExpanded);
-            sidebar.classList.toggle('lg:w-[60px]', isExpanded);
-            content.classList.toggle('hidden', isExpanded);
-        }
-
-        const lineCtx = document.getElementById('organicLineChart').getContext('2d');
-        new Chart(lineCtx, {
+        new Chart(document.getElementById('organicLineChart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: universityData.map(d => d.term.split(' ')[1]),
@@ -239,10 +197,11 @@
                     { label: 'Impressões', data: universityData.map(d => d.sImp), borderColor: '#ef4444', tension: 0.4, yAxisID: 'y1' }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y1: { position: 'right', grid: { drawOnChartArea: false } } }, plugins: { legend: { display: false } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y1: { position: 'right', grid: { display: false } } } }
         });
 
-        window.onload = () => { renderAds(); renderOrg(); updateKPIs(); lucide.createIcons(); };
+        window.onload = () => { renderAds(); renderOrg(); renderAISuggestions(); updateKPIs(); lucide.createIcons(); };
+        function toggleAI() { document.getElementById('ai-sidebar').classList.toggle('lg:w-[400px]'); document.getElementById('ai-content').classList.toggle('hidden'); }
     </script>
 </body>
 </html>
